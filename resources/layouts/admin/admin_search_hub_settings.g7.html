@@ -1,0 +1,31 @@
+<layout name="admin_search_hub_settings" version="1.0.0" extends="_admin_base">
+  <meta title="$t:glitter-search_hub.admin.settings.title"/>
+  <data-source id="settings" label_key="$t:glitter-search_hub.editor.settings" type="api" endpoint="/api/modules/glitter-search_hub/admin/search-hub/settings" method="GET" :auto_fetch="true" :auth_required="true">
+    <fallback><field name="data" :value="{}"/></fallback>
+  </data-source>
+  <permissions><permission>glitter-search_hub.search_hub.read</permission></permissions>
+  <slot name="content">
+    <div class="gsh-page">
+      <page-header title="$t:glitter-search_hub.admin.settings.title" description="$t:glitter-search_hub.admin.description"/>
+      <nav class="gsh-nav" aria-label="$t:glitter-search_hub.admin.navigation">
+        <a href="/admin/search-hub/dashboard" aria-current="{{route.path === '/admin/search-hub/dashboard' ? 'page' : null}}">$t:glitter-search_hub.admin.dashboard.title</a>
+        <a href="/admin/search-hub/providers" aria-current="{{route.path === '/admin/search-hub/providers' ? 'page' : null}}">$t:glitter-search_hub.admin.providers.title</a>
+        <a href="/admin/search-hub/analytics" aria-current="{{route.path === '/admin/search-hub/analytics' ? 'page' : null}}">$t:glitter-search_hub.admin.analytics.title</a>
+        <a href="/admin/search-hub/diagnostics" aria-current="{{route.path === '/admin/search-hub/diagnostics' ? 'page' : null}}">$t:glitter-search_hub.admin.diagnostics.title</a>
+        <a href="/admin/search-hub/settings" aria-current="{{route.path === '/admin/search-hub/settings' ? 'page' : null}}">$t:glitter-search_hub.admin.settings.title</a>
+      </nav>
+      <section class="gsh-card">
+        <p>
+          <span>$t:glitter-search_hub.settings.query_text_storage:</span>
+          <span data-if="{{settings?.data?.query_text_storage === true}}">$t:glitter-search_hub.settings.enabled</span>
+          <span data-if="{{settings?.data?.query_text_storage === false}}">$t:glitter-search_hub.settings.disabled</span>
+        </p>
+        <p>
+          <span>$t:glitter-search_hub.settings.retention:</span>
+          <span data-if="{{settings?.data?.automatic_analytics_retention === true}}">$t:glitter-search_hub.settings.enabled</span>
+          <span data-if="{{settings?.data?.automatic_analytics_retention === false}}">$t:glitter-search_hub.settings.disabled</span>
+        </p>
+      </section>
+    </div>
+  </slot>
+</layout>

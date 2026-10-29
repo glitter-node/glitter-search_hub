@@ -1,0 +1,69 @@
+<layout name="admin_search_hub_providers" version="1.0.0" extends="_admin_base">
+  <meta title="$t:glitter-search_hub.admin.providers.title"/>
+  <data-source id="providers" label_key="$t:glitter-search_hub.editor.providers" type="api" endpoint="/api/modules/glitter-search_hub/admin/search-hub/providers" method="GET" :auto_fetch="true" :auth_required="true">
+    <fallback><field name="data" :value="[]"/></fallback>
+  </data-source>
+  <data-source id="endpointDiscovery" label_key="$t:glitter-search_hub.admin.discovery.title" type="api" endpoint="/api/modules/glitter-search_hub/admin/search-hub/providers/discovery" method="GET" :auto_fetch="true" :auth_required="true">
+    <fallback><field name="candidates" :value="[]"/></fallback>
+  </data-source>
+  <permissions><permission>glitter-search_hub.search_hub.read</permission></permissions>
+  <slot name="content">
+    <div class="gsh-page">
+      <page-header title="$t:glitter-search_hub.admin.providers.title" description="$t:glitter-search_hub.admin.description"/>
+      <nav class="gsh-nav" aria-label="$t:glitter-search_hub.admin.navigation">
+        <a href="/admin/search-hub/dashboard" aria-current="{{route.path === '/admin/search-hub/dashboard' ? 'page' : null}}">$t:glitter-search_hub.admin.dashboard.title</a>
+        <a href="/admin/search-hub/providers" aria-current="{{route.path === '/admin/search-hub/providers' ? 'page' : null}}">$t:glitter-search_hub.admin.providers.title</a>
+        <a href="/admin/search-hub/analytics" aria-current="{{route.path === '/admin/search-hub/analytics' ? 'page' : null}}">$t:glitter-search_hub.admin.analytics.title</a>
+        <a href="/admin/search-hub/diagnostics" aria-current="{{route.path === '/admin/search-hub/diagnostics' ? 'page' : null}}">$t:glitter-search_hub.admin.diagnostics.title</a>
+        <a href="/admin/search-hub/settings" aria-current="{{route.path === '/admin/search-hub/settings' ? 'page' : null}}">$t:glitter-search_hub.admin.settings.title</a>
+      </nav>
+      <section class="gsh-card">
+        <data-grid data-type="composite" data-ref="providers_grid" data="{{providers?.data ?? []}}" :pagination="false" :sortable="false" emptyMessage="$t:common.no_data">
+          <column field="key" header="$t:glitter-search_hub.providers.name" :sortable="false" :required="true"><cell><span>{{row.label ?? row.key}}</span><small>{{row.key}}</small></cell></column>
+          <column field="owner_type" header="$t:glitter-search_hub.providers.owner_type" :sortable="false"><cell><span>{{row.owner_type}}</span><small>{{row.owner_id}}</small></cell></column>
+          <column field="module_id" header="$t:glitter-search_hub.providers.module" :sortable="false"><cell><span>{{row.module_id ?? row.owner_id}}</span></cell></column>
+          <column field="available" header="$t:glitter-search_hub.providers.status" :sortable="false"><cell><span>{{row.available ? '$t:glitter-search_hub.providers.available' : '$t:glitter-search_hub.providers.unavailable'}}</span><small>{{row.unavailable_reason}}</small></cell></column>
+          <column field="enabled" header="$t:glitter-search_hub.providers.enabled" :sortable="false"><cell><input type="checkbox" aria-label="$t:glitter-search_hub.providers.enabled" checked="{{row.enabled}}" disabled="{{!row.available}}">
+            <on type="change">
+              <api-call :auth_required="true" target="/api/modules/glitter-search_hub/admin/search-hub/providers/{{row.key}}" method="PUT" body="{{{enabled: $event.target.checked, sort_order: row.sort_order, supported_types: row.supported_types}}}">
+                <success><refetch-data-source dataSourceId="providers"/><toast type="success" message="$t:glitter-search_hub.messages.saved"/></success>
+                <fail><toast type="error" message="{{error.message ?? '$t:glitter-search_hub.messages.save_failed'}}"/></fail>
+              </api-call>
+            </on>
+          </input></cell></column>
+          <column field="sort_order" header="$t:glitter-search_hub.providers.order" :sortable="false"><cell><input type="number" min="0" max="65535" value="{{row.sort_order}}" aria-label="$t:glitter-search_hub.providers.order">
+            <on type="change">
+              <api-call :auth_required="true" target="/api/modules/glitter-search_hub/admin/search-hub/providers/{{row.key}}" method="PUT" body="{{{enabled: row.enabled, sort_order: Number($event.target.value), supported_types: row.supported_types}}}">
+                <success><refetch-data-source dataSourceId="providers"/><toast type="success" message="$t:glitter-search_hub.messages.saved"/></success>
+                <fail><toast type="error" message="{{error.message ?? '$t:glitter-search_hub.messages.save_failed'}}"/></fail>
+              </api-call>
+            </on>
+          </input></cell></column>
+          <column field="supported_types" header="$t:glitter-search_hub.providers.types" :sortable="false"><cell><span>{{(row.supported_types ?? []).join(', ')}}</span></cell></column>
+        </data-grid>
+        <div data-if="{{(providers?.data ?? []).filter(item => item.owner_type === 'template').length === 0}}" class="gsh-help">$t:glitter-search_hub.admin.discovery.template_empty</div>
+        <p class="gsh-help">$t:glitter-search_hub.admin.provider_note</p>
+      </section>
+      <section class="gsh-card">
+        <div class="gsh-section-head"><div><h2>$t:glitter-search_hub.admin.discovery.title</h2><p class="gsh-help">$t:glitter-search_hub.admin.discovery.description</p></div><button type="button" class="gsh-button"><on type="click"><refetch-data-source dataSourceId="endpointDiscovery"/></on>$t:glitter-search_hub.admin.discovery.refresh</button></div>
+        <div class="gsh-discovery-summary" aria-label="$t:glitter-search_hub.admin.discovery.summary_label">
+          <span><span class="gsh-discovery-count">{{(endpointDiscovery?.data?.candidates ?? []).length}}</span><span>$t:glitter-search_hub.admin.discovery.total</span></span>
+          <span><span class="gsh-discovery-count">{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.status === 'registered').length}}</span><span>$t:glitter-search_hub.admin.discovery.connected</span></span>
+          <span><span class="gsh-discovery-count">{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.registration_allowed === true).length}}</span><span>$t:glitter-search_hub.admin.discovery.registrable</span></span>
+          <span><span class="gsh-discovery-count">{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.registration_allowed !== true).length}}</span><span>$t:glitter-search_hub.admin.discovery.unavailable</span></span>
+        </div>
+        <div data-if="{{(endpointDiscovery?.data?.candidates ?? []).length === 0}}" class="gsh-help">$t:glitter-search_hub.admin.discovery.empty</div>
+        <div data-if="{{(endpointDiscovery?.data?.candidates ?? []).length > 0}}" class="gsh-table-wrap">
+          <data-grid data-type="composite" data-ref="endpoint_discovery_grid" data="{{endpointDiscovery?.data?.candidates ?? []}}" :pagination="false" :sortable="false" emptyMessage="$t:glitter-search_hub.admin.discovery.empty">
+            <column field="uri" header="$t:glitter-search_hub.admin.discovery.endpoint" :sortable="false"><cell><span class="break-all">{{row.uri ?? '$t:glitter-search_hub.admin.discovery.uri_unknown'}}</span><small class="break-all">{{row.name ?? '$t:glitter-search_hub.admin.discovery.unnamed'}}</small></cell></column>
+            <column field="methods" header="$t:glitter-search_hub.admin.discovery.method" :sortable="false"><cell><span>{{(row.methods ?? []).join(', ')}}</span></cell></column>
+            <column field="access" header="$t:glitter-search_hub.admin.discovery.access" :sortable="false"><cell><span>{{row.admin_only ? '$t:glitter-search_hub.admin.discovery.admin_only' : (row.authentication_required ? '$t:glitter-search_hub.admin.discovery.auth_required' : '$t:glitter-search_hub.admin.discovery.public')}}</span><small>{{row.module_id ?? '$t:glitter-search_hub.admin.discovery.host'}}</small></cell></column>
+            <column field="contract" header="$t:glitter-search_hub.admin.discovery.contract" :sortable="false"><cell><span>{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.verified' : (row.status === 'contract_unverified' ? '$t:glitter-search_hub.admin.discovery.unverified' : '$t:glitter-search_hub.admin.discovery.unsupported')}}</span><small>{{row.response_contract ?? '$t:glitter-search_hub.admin.discovery.contract_unknown'}}</small></cell></column>
+            <column field="registry" header="$t:glitter-search_hub.admin.discovery.registry" :sortable="false"><cell><span>{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.connected' : '$t:glitter-search_hub.admin.discovery.not_connected'}}</span><small>{{(row.provider_keys ?? []).join(', ')}}</small></cell></column>
+            <column field="reason" header="$t:glitter-search_hub.admin.discovery.note" :sortable="false"><cell><span>{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.search_entrypoint' : (row.reason === 'admin_or_internal_endpoint' ? '$t:glitter-search_hub.admin.discovery.admin_internal_blocked' : '$t:glitter-search_hub.admin.discovery.contract_required')}}</span><small>{{row.reason}}</small></cell></column>
+          </data-grid>
+        </div>
+      </section>
+    </div>
+  </slot>
+</layout>

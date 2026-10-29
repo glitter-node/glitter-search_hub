@@ -1,0 +1,23 @@
+{
+  "editor": {"providers": "Search Providers", "analytics": "Search Analytics", "diagnostics": "Search Diagnostics", "settings": "Search Settings"},
+  "admin": {
+    "title": "Glitter Search Hub",
+    "description": "Manage integrated search providers and operational analytics.",
+    "navigation": "Search Hub navigation",
+    "dashboard": {"title": "Dashboard", "available_providers": "Available search providers", "recent_activity": "Search activity in the last 7 days"},
+    "providers": {"title": "Search Providers"},
+    "discovery": {"title": "Host search endpoint discovery", "description": "Review local GET routes and their verified search-contract status.", "refresh": "Discover again", "empty": "No search-related endpoints were found.", "unnamed": "Unnamed route", "uri_unknown": "URI unavailable", "register": "Add provider", "template_empty": "No search providers are declared by the active user template.", "summary_label": "Host endpoint discovery summary", "total": "total candidates", "connected": "connected", "registrable": "registrable", "unavailable": "not registrable", "endpoint": "Endpoint", "method": "HTTP method", "access": "Access scope", "contract": "Search contract", "registry": "Registry status", "note": "Note", "public": "Public", "auth_required": "Authentication required", "admin_only": "Admin only", "host": "Host route", "verified": "Verified", "unverified": "Contract unverified", "unsupported": "Unsupported", "contract_unknown": "Contract not confirmed", "not_connected": "No provider connected", "search_entrypoint": "Core search entrypoint; existing providers are listed below", "admin_internal_blocked": "Administrative or internal route is blocked", "contract_required": "A verified search contract is required"},
+    "analytics": {"title": "Search Analytics"},
+    "diagnostics": {"title": "Search Diagnostics"},
+    "settings": {"title": "Settings"},
+    "provider_note": "Enabling a provider does not replace the source module's access checks. Providers declared by active modules are discovered automatically."
+  },
+  "providers": {"name": "Provider", "module": "Module", "owner_type": "Owner type", "status": "Status", "available": "Available", "unavailable": "Unavailable", "enabled": "Include in results", "order": "Display order", "types": "Search types"},
+  "analytics": {"date": "Date", "provider": "Provider", "requests": "Requests", "successes": "Successes", "failures": "Failures", "empty": "No results"},
+  "diagnostics": {"endpoint": "Search API", "database": "Database connection", "connected": "Connected", "unavailable": "Unavailable", "providers": "Available providers", "tables": "Required tables", "providers_table": "Provider table", "queries_table": "Search analytics table", "present": "Present", "missing": "Missing"},
+  "settings": {"query_text_storage": "Store raw search terms", "retention": "Automatic analytics cleanup", "enabled": "Enabled", "disabled": "Disabled"},
+  "messages": {"saved": "Search provider settings saved.", "save_failed": "Could not save search provider settings."},
+  "search": {
+    "title": "Integrated Search", "results": "Search results", "keyword": "Search term", "target": "Search target", "all": "All", "posts": "Posts", "pages": "Pages", "sort": "Sort", "relevance": "Relevance", "latest": "Newest first", "oldest": "Oldest first", "page": "Page number", "submit": "Search", "prompt": "Enter at least two characters.", "length_hint": "Enter 2 to 200 characters.", "loading": "Loading search results.", "providers_failed": "Could not load search targets.", "request_failed": "The search request failed.", "total_count": "{count} search results", "section_count": "{name} ({count})", "pagination": "Search result pages", "previous": "Previous", "next": "Next", "page_status": "Page {page} of {pages}", "page_status_unknown": "Page {page}", "failed": "Some search sources could not be searched.", "empty": "No results found."
+  }
+}

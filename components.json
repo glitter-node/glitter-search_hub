@@ -1,0 +1,10 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "identifier": "glitter-search_hub",
+    "version": "0.1.4",
+    "components": {
+        "basic": [],
+        "composite": [],
+        "layout": []
+    }
+}

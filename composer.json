@@ -1,0 +1,14 @@
+{
+    "name": "modules/glitter-search_hub",
+    "description": "Glitter Search Hub module for Gnuboard7",
+    "type": "library",
+    "version": "0.1.6",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Glitter\\SearchHub\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2"
+    }
+}

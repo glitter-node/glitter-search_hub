@@ -1,0 +1,23 @@
+{
+  "editor": {"providers": "검색 제공자", "analytics": "검색 통계", "diagnostics": "검색 진단", "settings": "검색 설정"},
+  "admin": {
+    "title": "Glitter Search Hub",
+    "description": "통합 검색 제공자와 운영 통계를 관리합니다.",
+    "navigation": "검색 허브 메뉴",
+    "dashboard": {"title": "대시보드", "available_providers": "사용 가능한 검색 제공자", "recent_activity": "최근 7일 검색 활동"},
+    "providers": {"title": "검색 제공자"},
+    "discovery": {"title": "호스트 검색 엔드포인트 탐색", "description": "등록된 로컬 GET 라우트를 확인하고 검색 계약 상태를 검토합니다.", "refresh": "다시 탐색", "empty": "발견된 호스트 검색 엔드포인트가 없습니다.", "unnamed": "이름 없는 라우트", "uri_unknown": "URI 확인 불가", "register": "제공자 추가", "template_empty": "현재 활성 사용자 템플릿에서 선언한 검색 제공자가 없습니다.", "summary_label": "호스트 엔드포인트 탐색 요약", "total": "전체 후보", "connected": "기존 제공자 연결", "registrable": "등록 가능", "unavailable": "등록 불가", "endpoint": "엔드포인트", "method": "HTTP 메서드", "access": "접근 범위", "contract": "검색 계약", "registry": "Registry 연결", "note": "비고", "public": "공개", "auth_required": "인증 필요", "admin_only": "관리자 전용", "host": "호스트 라우트", "verified": "검증됨", "unverified": "계약 미확인", "unsupported": "지원 제외", "contract_unknown": "계약 확인 안 됨", "not_connected": "연결된 제공자 없음", "search_entrypoint": "코어 검색 진입점이며 기존 제공자는 아래에 표시됩니다", "admin_internal_blocked": "관리자 또는 내부 라우트로 차단됨", "contract_required": "검증된 검색 계약이 필요합니다"},
+    "analytics": {"title": "검색 통계"},
+    "diagnostics": {"title": "검색 진단"},
+    "settings": {"title": "설정"},
+    "provider_note": "검색 제공자 활성화는 원본 모듈의 권한 검사를 대체하지 않습니다. 활성 모듈이 선언한 제공자가 자동으로 표시됩니다."
+  },
+  "providers": {"name": "제공자", "module": "소속 모듈", "owner_type": "소유 유형", "status": "상태", "available": "사용 가능", "unavailable": "사용 불가", "enabled": "응답 사용", "order": "표시 순서", "types": "검색 유형"},
+  "analytics": {"date": "날짜", "provider": "제공자", "requests": "요청", "successes": "성공", "failures": "실패", "empty": "결과 없음"},
+  "diagnostics": {"endpoint": "검색 API", "database": "데이터베이스 연결", "connected": "연결됨", "unavailable": "사용할 수 없음", "providers": "사용 가능한 제공자", "tables": "필수 테이블", "providers_table": "제공자 테이블", "queries_table": "검색 통계 테이블", "present": "존재", "missing": "없음"},
+  "settings": {"query_text_storage": "검색어 원문 저장", "retention": "자동 통계 정리", "enabled": "사용", "disabled": "사용 안 함"},
+  "messages": {"saved": "검색 제공자 설정을 저장했습니다.", "save_failed": "검색 제공자 설정을 저장하지 못했습니다."},
+  "search": {
+    "title": "통합 검색", "results": "검색 결과", "keyword": "검색어", "target": "검색 대상", "all": "전체", "posts": "게시글", "pages": "페이지", "sort": "정렬", "relevance": "관련도순", "latest": "최신순", "oldest": "오래된순", "page": "페이지 번호", "submit": "검색", "prompt": "두 글자 이상의 검색어를 입력하세요.", "length_hint": "검색어는 2~200자로 입력해 주세요.", "loading": "검색 결과를 불러오는 중입니다.", "providers_failed": "검색 대상을 불러오지 못했습니다.", "request_failed": "검색 요청을 처리하지 못했습니다.", "total_count": "검색 결과 {count}건", "section_count": "{name} ({count})", "pagination": "검색 결과 페이지", "previous": "이전", "next": "다음", "page_status": "{page} / {pages} 페이지", "page_status_unknown": "{page}페이지", "failed": "일부 검색 대상에서 오류가 발생했습니다.", "empty": "검색 결과가 없습니다."
+  }
+}

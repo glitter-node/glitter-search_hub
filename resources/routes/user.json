@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "routes": [
+    {
+      "path": "*/search-hub",
+      "layout": "user_search_hub",
+      "auth_required": false,
+      "meta": {"title": "$t:glitter-search_hub.search.title"}
+    }
+  ]
+}

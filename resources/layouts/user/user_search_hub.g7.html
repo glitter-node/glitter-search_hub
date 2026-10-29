@@ -1,0 +1,72 @@
+<layout name="user_search_hub" version="1.1.1" extends="_user_base">
+  <meta title="$t:glitter-search_hub.search.title"/>
+  <data-source id="providerCatalog" type="api" endpoint="/api/modules/glitter-search_hub/providers" method="GET" :auto_fetch="true" :auth_required="false"/>
+  <data-source id="searchResults" label_key="$t:glitter-search_hub.search.results" type="api" endpoint="/api/search?q={{encodeURIComponent((query?.q ?? '').trim())}}&amp;type={{encodeURIComponent(query?.type ?? 'all')}}&amp;sort={{encodeURIComponent(query?.sort ?? 'relevance')}}&amp;page={{query?.page ?? 1}}&amp;per_page=10&amp;cursor={{encodeURIComponent(query?.cursor ?? '')}}" method="GET" :auto_fetch="true" :auth_required="false" condition="{{(query?.q ?? '').trim().length >= 2 &amp;&amp; (query?.q ?? '').trim().length &lt;= 200}}"/>
+  <slot name="content">
+    <div class="gsh-page">
+      <h1>$t:glitter-search_hub.search.title</h1>
+      <form action="/search" method="get" class="gsh-search-form">
+        <label for="gsh-query">$t:glitter-search_hub.search.keyword</label>
+        <input id="gsh-query" name="q" type="search" value="{{query?.q ?? ''}}" minlength="2" maxlength="200" required="required"/>
+        <label for="gsh-type">$t:glitter-search_hub.search.target</label>
+        <select id="gsh-type" name="type" value="{{query?.type ?? 'all'}}">
+          <option value="all">$t:glitter-search_hub.search.all</option>
+          <option data-each="provider in providerCatalog?.data ?? []" value="{{provider.search_type}}">{{provider.label}}</option>
+        </select>
+        <label for="gsh-sort">$t:glitter-search_hub.search.sort</label>
+        <select id="gsh-sort" name="sort" value="{{query?.sort ?? 'relevance'}}">
+          <option value="relevance">$t:glitter-search_hub.search.relevance</option>
+          <option value="latest">$t:glitter-search_hub.search.latest</option>
+          <option value="oldest">$t:glitter-search_hub.search.oldest</option>
+        </select>
+        <input name="page" type="hidden" value="1"/>
+        <button type="submit">$t:glitter-search_hub.search.submit</button>
+      </form>
+
+      <p data-if="{{!query?.q}}">$t:glitter-search_hub.search.prompt</p>
+      <p data-if="{{query?.q &amp;&amp; ((query.q.trim().length &lt; 2) || (query.q.trim().length &gt; 200))}}" role="status">$t:glitter-search_hub.search.length_hint</p>
+      <p data-if="{{query?.q &amp;&amp; !providerCatalog?.data &amp;&amp; !_dataSourceErrors?.providerCatalog}}" role="status">$t:glitter-search_hub.search.loading</p>
+      <p data-if="{{_dataSourceErrors?.providerCatalog}}" role="alert">$t:glitter-search_hub.search.providers_failed</p>
+      <p data-if="{{query?.q &amp;&amp; (query.q.trim().length &gt;= 2) &amp;&amp; !searchResults?.data &amp;&amp; !_dataSourceErrors?.searchResults}}" role="status">$t:glitter-search_hub.search.loading</p>
+      <p data-if="{{query?.q &amp;&amp; _dataSourceErrors?.searchResults}}" role="alert">$t:glitter-search_hub.search.request_failed</p>
+      <p data-if="{{query?.q &amp;&amp; searchResults?.data?.search_failed}}" role="alert">$t:glitter-search_hub.search.failed</p>
+      <p data-if="{{query?.q &amp;&amp; searchResults?.data &amp;&amp; !_dataSourceErrors?.searchResults}}" role="status">$t:glitter-search_hub.search.total_count|count={{searchResults?.data?.total ?? 0}}</p>
+      <p data-if="{{query?.q &amp;&amp; !searchResults?.data?.search_failed &amp;&amp; searchResults?.data?.total === 0}}" role="status">$t:glitter-search_hub.search.empty</p>
+
+      <div data-each="provider in providerCatalog?.data ?? []" data-if="{{((query?.type ?? 'all') === 'all' || query?.type === provider.search_type) &amp;&amp; (searchResults?.data?.[provider.provider_id]?.items?.length ?? 0) &gt; 0}}" class="gsh-card">
+        <h2>$t:glitter-search_hub.search.section_count|name={{provider.label}}|count={{searchResults?.data?.[provider.provider_id + '_count'] ?? 0}}</h2>
+        <ul>
+          <li data-each="item in searchResults?.data?.[provider.provider_id]?.items ?? []">
+            <a href="{{item.url}}">{{item.title}}</a>
+            <p data-if="{{item.category}}">{{item.category}}</p>
+            <p data-if="{{item.summary || item.content_preview}}">{{item.summary ?? item.content_preview}}</p>
+            <div data-if="{{(item.links?.length ?? 0) &gt; 1}}">
+              <a data-each="link in item.links ?? []" href="{{link.url}}">{{link.label}}</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <nav data-if="{{query?.q &amp;&amp; (query?.type ?? 'all') !== 'all' &amp;&amp; ((searchResults?.data?.current_page ?? 1) &gt; 1 || searchResults?.data?.has_more_pages)}}" class="gsh-nav" aria-label="$t:glitter-search_hub.search.pagination">
+        <form data-if="{{(searchResults?.data?.current_page ?? 1) &gt; 1}}" action="/search" method="get" class="gsh-search-form">
+          <input name="q" type="hidden" value="{{query?.q ?? ''}}"/>
+          <input name="type" type="hidden" value="{{query?.type ?? 'all'}}"/>
+          <input name="sort" type="hidden" value="{{query?.sort ?? 'relevance'}}"/>
+          <input name="page" type="hidden" value="{{Math.max(1, Number(searchResults?.data?.current_page ?? 1) - 1)}}"/>
+          <input name="cursor" type="hidden" value="{{searchResults?.data?.prev_cursor ?? ''}}"/>
+          <button type="submit">$t:glitter-search_hub.search.previous</button>
+        </form>
+        <span data-if="{{searchResults?.data?.last_page != null}}">$t:glitter-search_hub.search.page_status|page={{searchResults?.data?.current_page ?? 1}}|pages={{searchResults?.data?.last_page}}</span>
+        <span data-if="{{searchResults?.data?.last_page == null}}">$t:glitter-search_hub.search.page_status_unknown|page={{searchResults?.data?.current_page ?? 1}}</span>
+        <form data-if="{{searchResults?.data?.has_more_pages}}" action="/search" method="get" class="gsh-search-form">
+          <input name="q" type="hidden" value="{{query?.q ?? ''}}"/>
+          <input name="type" type="hidden" value="{{query?.type ?? 'all'}}"/>
+          <input name="sort" type="hidden" value="{{query?.sort ?? 'relevance'}}"/>
+          <input name="page" type="hidden" value="{{Number(searchResults?.data?.current_page ?? 1) + 1}}"/>
+          <input name="cursor" type="hidden" value="{{searchResults?.data?.next_cursor ?? ''}}"/>
+          <button type="submit">$t:glitter-search_hub.search.next</button>
+        </form>
+      </nav>
+    </div>
+  </slot>
+</layout>

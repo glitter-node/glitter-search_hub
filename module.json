@@ -1,0 +1,33 @@
+{
+    "identifier": "glitter-search_hub",
+    "vendor": "Glitter.kr",
+    "name": {
+        "ko": "Glitter Search Hub",
+        "en": "Glitter Search Hub"
+    },
+    "version": "0.1.7",
+    "description": {
+        "ko": "그누보드 통합 검색 제공자와 집계 통계를 관리합니다.",
+        "en": "Manage Gnuboard integrated search providers and aggregate analytics."
+    },
+    "g7_version": ">=7.1.1",
+    "dependencies": {
+        "modules": {},
+        "plugins": {}
+    },
+    "assets": {
+        "js": {
+            "entry": "resources/js/index.ts",
+            "output": "dist/js/module.iife.js"
+        },
+        "css": {
+            "entry": "resources/css/main.css",
+            "output": "dist/css/module.css"
+        },
+        "handlers": true
+    },
+    "loading": {
+        "strategy": "global",
+        "priority": 100
+    }
+}

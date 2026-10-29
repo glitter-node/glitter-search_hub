@@ -1,0 +1,31 @@
+<layout name="admin_search_hub" version="1.0.0" extends="_admin_base">
+  <meta title="$t:glitter-search_hub.admin.dashboard.title"/>
+  <data-source id="dashboard" label_key="$t:glitter-search_hub.admin.dashboard.title" type="api" endpoint="/api/modules/glitter-search_hub/admin/search-hub/dashboard" method="GET" :auto_fetch="true" :auth_required="true">
+    <fallback><field name="data" :value="{&quot;providers&quot;:[],&quot;analytics&quot;:[]}"/></fallback>
+  </data-source>
+  <permissions><permission>glitter-search_hub.search_hub.read</permission></permissions>
+  <slot name="content">
+    <div class="gsh-page">
+      <page-header title="$t:glitter-search_hub.admin.dashboard.title" description="$t:glitter-search_hub.admin.description"/>
+      <nav class="gsh-nav" aria-label="$t:glitter-search_hub.admin.navigation">
+        <a href="/admin/search-hub/dashboard" aria-current="{{route.path === '/admin/search-hub' || route.path === '/admin/search-hub/dashboard' ? 'page' : null}}">$t:glitter-search_hub.admin.dashboard.title</a>
+        <a href="/admin/search-hub/providers" aria-current="{{route.path === '/admin/search-hub/providers' ? 'page' : null}}">$t:glitter-search_hub.admin.providers.title</a>
+        <a href="/admin/search-hub/analytics" aria-current="{{route.path === '/admin/search-hub/analytics' ? 'page' : null}}">$t:glitter-search_hub.admin.analytics.title</a>
+        <a href="/admin/search-hub/diagnostics" aria-current="{{route.path === '/admin/search-hub/diagnostics' ? 'page' : null}}">$t:glitter-search_hub.admin.diagnostics.title</a>
+        <a href="/admin/search-hub/settings" aria-current="{{route.path === '/admin/search-hub/settings' ? 'page' : null}}">$t:glitter-search_hub.admin.settings.title</a>
+      </nav>
+      <section class="gsh-card">
+        <h2>$t:glitter-search_hub.admin.dashboard.available_providers</h2>
+        <p>{{(dashboard?.data?.providers ?? []).filter((provider) => provider.available).length}} / {{(dashboard?.data?.providers ?? []).length}}</p>
+      </section>
+      <section class="gsh-card">
+        <h2>$t:glitter-search_hub.admin.dashboard.recent_activity</h2>
+        <data-grid data-type="composite" data-ref="dashboard_analytics_grid" data="{{dashboard?.data?.analytics ?? []}}" :pagination="false" :sortable="false" emptyMessage="$t:common.no_data">
+          <column field="stat_date" header="$t:glitter-search_hub.analytics.date" :sortable="false" :required="true"><cell><span>{{row.stat_date}}</span></cell></column>
+          <column field="provider_key" header="$t:glitter-search_hub.analytics.provider" :sortable="false"><cell><span>{{row.provider_key}}</span></cell></column>
+          <column field="request_count" header="$t:glitter-search_hub.analytics.requests" :sortable="false"><cell><span>{{row.request_count}}</span></cell></column>
+        </data-grid>
+      </section>
+    </div>
+  </slot>
+</layout>

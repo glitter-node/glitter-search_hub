@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "routes": [
+    {"path": "*/admin/search-hub", "layout": "admin_search_hub", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.title"}},
+    {"path": "*/admin/search-hub/dashboard", "layout": "admin_search_hub", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.dashboard.title"}},
+    {"path": "*/admin/search-hub/providers", "layout": "admin_search_hub_providers", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.providers.title"}},
+    {"path": "*/admin/search-hub/analytics", "layout": "admin_search_hub_analytics", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.analytics.title"}},
+    {"path": "*/admin/search-hub/diagnostics", "layout": "admin_search_hub_diagnostics", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.diagnostics.title"}},
+    {"path": "*/admin/search-hub/settings", "layout": "admin_search_hub_settings", "auth_required": true, "meta": {"title": "$t:glitter-search_hub.admin.settings.title"}}
+  ]
+}

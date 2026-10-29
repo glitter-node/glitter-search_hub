@@ -1,0 +1,607 @@
+{
+    "version": "1.0.0",
+    "layout_name": "admin_search_hub_providers",
+    "extends": "_admin_base",
+    "meta": {
+        "title": "$t:glitter-search_hub.admin.providers.title"
+    },
+    "data_sources": [
+        {
+            "id": "providers",
+            "label_key": "$t:glitter-search_hub.editor.providers",
+            "type": "api",
+            "endpoint": "/api/modules/glitter-search_hub/admin/search-hub/providers",
+            "method": "GET",
+            "auto_fetch": true,
+            "auth_required": true,
+            "fallback": {
+                "data": []
+            }
+        },
+        {
+            "id": "endpointDiscovery",
+            "label_key": "$t:glitter-search_hub.admin.discovery.title",
+            "type": "api",
+            "endpoint": "/api/modules/glitter-search_hub/admin/search-hub/providers/discovery",
+            "method": "GET",
+            "auto_fetch": true,
+            "auth_required": true,
+            "fallback": {
+                "candidates": []
+            }
+        }
+    ],
+    "permissions": [
+        "glitter-search_hub.search_hub.read"
+    ],
+    "slots": {
+        "content": [
+            {
+                "type": "basic",
+                "name": "Div",
+                "props": {
+                    "className": "gsh-page"
+                },
+                "children": [
+                    {
+                        "type": "basic",
+                        "name": "PageHeader",
+                        "props": {
+                            "title": "$t:glitter-search_hub.admin.providers.title",
+                            "description": "$t:glitter-search_hub.admin.description"
+                        }
+                    },
+                    {
+                        "type": "basic",
+                        "name": "Nav",
+                        "props": {
+                            "className": "gsh-nav",
+                            "aria-label": "$t:glitter-search_hub.admin.navigation"
+                        },
+                        "children": [
+                            {
+                                "type": "basic",
+                                "name": "A",
+                                "props": {
+                                    "href": "/admin/search-hub/dashboard",
+                                    "aria-current": "{{route.path === '/admin/search-hub/dashboard' ? 'page' : null}}"
+                                },
+                                "text": "$t:glitter-search_hub.admin.dashboard.title"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "A",
+                                "props": {
+                                    "href": "/admin/search-hub/providers",
+                                    "aria-current": "{{route.path === '/admin/search-hub/providers' ? 'page' : null}}"
+                                },
+                                "text": "$t:glitter-search_hub.admin.providers.title"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "A",
+                                "props": {
+                                    "href": "/admin/search-hub/analytics",
+                                    "aria-current": "{{route.path === '/admin/search-hub/analytics' ? 'page' : null}}"
+                                },
+                                "text": "$t:glitter-search_hub.admin.analytics.title"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "A",
+                                "props": {
+                                    "href": "/admin/search-hub/diagnostics",
+                                    "aria-current": "{{route.path === '/admin/search-hub/diagnostics' ? 'page' : null}}"
+                                },
+                                "text": "$t:glitter-search_hub.admin.diagnostics.title"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "A",
+                                "props": {
+                                    "href": "/admin/search-hub/settings",
+                                    "aria-current": "{{route.path === '/admin/search-hub/settings' ? 'page' : null}}"
+                                },
+                                "text": "$t:glitter-search_hub.admin.settings.title"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "basic",
+                        "name": "Section",
+                        "props": {
+                            "className": "gsh-card"
+                        },
+                        "children": [
+                            {
+                                "id": "providers_grid",
+                                "type": "composite",
+                                "name": "DataGrid",
+                                "props": {
+                                    "data": "{{providers?.data ?? []}}",
+                                    "pagination": false,
+                                    "sortable": false,
+                                    "emptyMessage": "$t:common.no_data",
+                                    "columns": [
+                                        {
+                                            "field": "key",
+                                            "header": "$t:glitter-search_hub.providers.name",
+                                            "sortable": false,
+                                            "required": true,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{row.label ?? row.key}}"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Small",
+                                                    "text": "{{row.key}}"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "owner_type",
+                                            "header": "$t:glitter-search_hub.providers.owner_type",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{row.owner_type}}"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Small",
+                                                    "text": "{{row.owner_id}}"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "module_id",
+                                            "header": "$t:glitter-search_hub.providers.module",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{row.module_id ?? row.owner_id}}"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "available",
+                                            "header": "$t:glitter-search_hub.providers.status",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{row.available ? '$t:glitter-search_hub.providers.available' : '$t:glitter-search_hub.providers.unavailable'}}"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Small",
+                                                    "text": "{{row.unavailable_reason}}"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "enabled",
+                                            "header": "$t:glitter-search_hub.providers.enabled",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Input",
+                                                    "actions": [
+                                                        {
+                                                            "type": "change",
+                                                            "handler": "apiCall",
+                                                            "target": "/api/modules/glitter-search_hub/admin/search-hub/providers/{{row.key}}",
+                                                            "auth_required": true,
+                                                            "params": {
+                                                                "method": "PUT",
+                                                                "body": "{{{enabled: $event.target.checked, sort_order: row.sort_order, supported_types: row.supported_types}}}"
+                                                            },
+                                                            "onSuccess": [
+                                                                {
+                                                                    "handler": "refetchDataSource",
+                                                                    "params": {
+                                                                        "dataSourceId": "providers"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "handler": "toast",
+                                                                    "params": {
+                                                                        "type": "success",
+                                                                        "message": "$t:glitter-search_hub.messages.saved"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "onError": {
+                                                                "handler": "toast",
+                                                                "params": {
+                                                                    "type": "error",
+                                                                    "message": "{{error.message ?? '$t:glitter-search_hub.messages.save_failed'}}"
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "props": {
+                                                        "type": "checkbox",
+                                                        "aria-label": "$t:glitter-search_hub.providers.enabled",
+                                                        "checked": "{{row.enabled}}",
+                                                        "disabled": "{{!row.available}}"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "sort_order",
+                                            "header": "$t:glitter-search_hub.providers.order",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Input",
+                                                    "actions": [
+                                                        {
+                                                            "type": "change",
+                                                            "handler": "apiCall",
+                                                            "target": "/api/modules/glitter-search_hub/admin/search-hub/providers/{{row.key}}",
+                                                            "auth_required": true,
+                                                            "params": {
+                                                                "method": "PUT",
+                                                                "body": "{{{enabled: row.enabled, sort_order: Number($event.target.value), supported_types: row.supported_types}}}"
+                                                            },
+                                                            "onSuccess": [
+                                                                {
+                                                                    "handler": "refetchDataSource",
+                                                                    "params": {
+                                                                        "dataSourceId": "providers"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "handler": "toast",
+                                                                    "params": {
+                                                                        "type": "success",
+                                                                        "message": "$t:glitter-search_hub.messages.saved"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "onError": {
+                                                                "handler": "toast",
+                                                                "params": {
+                                                                    "type": "error",
+                                                                    "message": "{{error.message ?? '$t:glitter-search_hub.messages.save_failed'}}"
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "props": {
+                                                        "type": "number",
+                                                        "min": "0",
+                                                        "max": "65535",
+                                                        "value": "{{row.sort_order}}",
+                                                        "aria-label": "$t:glitter-search_hub.providers.order"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "field": "supported_types",
+                                            "header": "$t:glitter-search_hub.providers.types",
+                                            "sortable": false,
+                                            "cellChildren": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{(row.supported_types ?? []).join(', ')}}"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "if": "{{(providers?.data ?? []).filter(item => item.owner_type === 'template').length === 0}}",
+                                "props": {
+                                    "className": "gsh-help"
+                                },
+                                "text": "$t:glitter-search_hub.admin.discovery.template_empty"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "P",
+                                "props": {
+                                    "className": "gsh-help"
+                                },
+                                "text": "$t:glitter-search_hub.admin.provider_note"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "basic",
+                        "name": "Section",
+                        "props": {
+                            "className": "gsh-card"
+                        },
+                        "children": [
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": {
+                                    "className": "gsh-section-head"
+                                },
+                                "children": [
+                                    {
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "H2",
+                                                "text": "$t:glitter-search_hub.admin.discovery.title"
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "gsh-help"
+                                                },
+                                                "text": "$t:glitter-search_hub.admin.discovery.description"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Button",
+                                        "actions": [
+                                            {
+                                                "type": "click",
+                                                "handler": "refetchDataSource",
+                                                "params": {
+                                                    "dataSourceId": "endpointDiscovery"
+                                                }
+                                            }
+                                        ],
+                                        "props": {
+                                            "type": "button",
+                                            "className": "gsh-button"
+                                        },
+                                        "text": "$t:glitter-search_hub.admin.discovery.refresh"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": {
+                                    "className": "gsh-discovery-summary",
+                                    "aria-label": "$t:glitter-search_hub.admin.discovery.summary_label"
+                                },
+                                "children": [
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "props": {
+                                                    "className": "gsh-discovery-count"
+                                                },
+                                                "text": "{{(endpointDiscovery?.data?.candidates ?? []).length}}"
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "text": "$t:glitter-search_hub.admin.discovery.total"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "props": {
+                                                    "className": "gsh-discovery-count"
+                                                },
+                                                "text": "{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.status === 'registered').length}}"
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "text": "$t:glitter-search_hub.admin.discovery.connected"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "props": {
+                                                    "className": "gsh-discovery-count"
+                                                },
+                                                "text": "{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.registration_allowed === true).length}}"
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "text": "$t:glitter-search_hub.admin.discovery.registrable"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "props": {
+                                                    "className": "gsh-discovery-count"
+                                                },
+                                                "text": "{{(endpointDiscovery?.data?.candidates ?? []).filter(item => item.registration_allowed !== true).length}}"
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "Span",
+                                                "text": "$t:glitter-search_hub.admin.discovery.unavailable"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "if": "{{(endpointDiscovery?.data?.candidates ?? []).length === 0}}",
+                                "props": {
+                                    "className": "gsh-help"
+                                },
+                                "text": "$t:glitter-search_hub.admin.discovery.empty"
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "if": "{{(endpointDiscovery?.data?.candidates ?? []).length > 0}}",
+                                "props": {
+                                    "className": "gsh-table-wrap"
+                                },
+                                "children": [
+                                    {
+                                        "id": "endpoint_discovery_grid",
+                                        "type": "composite",
+                                        "name": "DataGrid",
+                                        "props": {
+                                            "data": "{{endpointDiscovery?.data?.candidates ?? []}}",
+                                            "pagination": false,
+                                            "sortable": false,
+                                            "emptyMessage": "$t:glitter-search_hub.admin.discovery.empty",
+                                            "columns": [
+                                                {
+                                                    "field": "uri",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.endpoint",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "props": {
+                                                                "className": "break-all"
+                                                            },
+                                                            "text": "{{row.uri ?? '$t:glitter-search_hub.admin.discovery.uri_unknown'}}"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Small",
+                                                            "props": {
+                                                                "className": "break-all"
+                                                            },
+                                                            "text": "{{row.name ?? '$t:glitter-search_hub.admin.discovery.unnamed'}}"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field": "methods",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.method",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "text": "{{(row.methods ?? []).join(', ')}}"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field": "access",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.access",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "text": "{{row.admin_only ? '$t:glitter-search_hub.admin.discovery.admin_only' : (row.authentication_required ? '$t:glitter-search_hub.admin.discovery.auth_required' : '$t:glitter-search_hub.admin.discovery.public')}}"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Small",
+                                                            "text": "{{row.module_id ?? '$t:glitter-search_hub.admin.discovery.host'}}"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field": "contract",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.contract",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "text": "{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.verified' : (row.status === 'contract_unverified' ? '$t:glitter-search_hub.admin.discovery.unverified' : '$t:glitter-search_hub.admin.discovery.unsupported')}}"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Small",
+                                                            "text": "{{row.response_contract ?? '$t:glitter-search_hub.admin.discovery.contract_unknown'}}"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field": "registry",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.registry",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "text": "{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.connected' : '$t:glitter-search_hub.admin.discovery.not_connected'}}"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Small",
+                                                            "text": "{{(row.provider_keys ?? []).join(', ')}}"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field": "reason",
+                                                    "header": "$t:glitter-search_hub.admin.discovery.note",
+                                                    "sortable": false,
+                                                    "cellChildren": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Span",
+                                                            "text": "{{row.status === 'registered' ? '$t:glitter-search_hub.admin.discovery.search_entrypoint' : (row.reason === 'admin_or_internal_endpoint' ? '$t:glitter-search_hub.admin.discovery.admin_internal_blocked' : '$t:glitter-search_hub.admin.discovery.contract_required')}}"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Small",
+                                                            "text": "{{row.reason}}"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
